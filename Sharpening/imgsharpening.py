@@ -14,8 +14,12 @@ def Conv2D(img:np.ndarray, mask:np.ndarray)->np.ndarray:
                 p = p.T
             padding_img = m((p, padding_img, p))
         return padding_img
-        
-    pimg = padding(img=img, extnum=(1,1))
+   
+    pimg = padding(
+        img=img, 
+        extnum=(mask.shape[0]//2,mask.shape[1]//2)
+    )
+    
     s = pimg.shape
     block_row_indices = np.arange(s[0]-2).reshape(-1,1) + np.arange(mask.shape[0])
     block_col_indices = np.arange(s[1]-2).reshape(-1,1) + np.arange(mask.shape[1]) 
@@ -41,18 +45,17 @@ class IMGSharpler():
             [-1,-1,-1]], dtype=np.float64
         )
   
-    def Laplacian_Sharpening(self, img:np.ndarray, strong_mask=False, A=1)->np.ndarray:
+    def Laplacian_Sharpening(self, img:np.ndarray, strong_mask=False, A=1.0)->np.ndarray:
         
         if strong_mask:
             m = self.__strong_lp_mask.copy()
         else:
             m = self.__lp_mask.copy()
     
-        m[1][1] = m[1][1] + A
-        
-        e = Conv2D(img=img.astype(np.float64), mask=m)
-        #clip(e, 0, 255)
-        e = e.astype(np.uint8)
+        m[1][1] =  A + m[1][1]
+
+        e = Conv2D(img=(img.astype(np.float64)), mask=m)
+        e =  np.clip(e, 0, 255).astype(np.uint8)
         return e
     
    
