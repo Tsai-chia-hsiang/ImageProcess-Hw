@@ -26,12 +26,12 @@
 
   直接使用兩個 for-loop 效能太低，為了提升速度，我將 mask 要運作的每個 blocks 先建構出來，為一個 
   
-  $/text{Blocks, size} = (M+1)/times (N+1) /times [3 /times 3]$
+  $$/text{Blocks, size} = (M+1)/times (N+1) /times [3 /times 3]$$
 
   之後就直接把 Blocks*mask (對應元素相乘)，再取 .sum(aixs = (2,3))，把每個block內與 mask 對應相乘後的結果相加，來實現 2D Convolution。
 
 - mask:
-  - $/text{Laplacian Operator}$:
+  - $$/text{Laplacian Operator}$$:
 
 $$/begin{bmatrix}
     0 & -1 & 0 //
