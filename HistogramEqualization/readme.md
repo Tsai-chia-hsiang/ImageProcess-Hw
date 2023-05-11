@@ -33,9 +33,9 @@
 
 - Transform:
    
-   有了histogram 之後，使用  ```np.cumsum(historgram/img.size)``` 將 $s_k, k=0,1,...,255$  算出來。
+   有了histogram 之後，使用  ```np.cumsum(historgram/img.size)``` 將 $s_k,k=0,1,...,255$ 算出來。
 
-   最後，將各$s_k$*255 並轉成 unsigned 8-bit int，作為 ```transform```，把原始圖片各pixel 的值換成對應的 ```transform``` 的值，即完成 global histogram equlization 。
+   最後，將各 $s_k*255$ 並轉成 unsigned 8-bit int，作為 ```transform```，把原始圖片各pixel 的值換成對應的 ```transform``` 的值，即完成 global histogram equlization 。
 
 - local histogram equlization:
     
@@ -49,48 +49,48 @@
 
 ### Lena:
 
-(o)<img src="HW1_test_image\Lena.bmp" width="30%">
-(g)<img src="result\globalhist\Lena\Lena.bmp" width="30%">
-(l)<img src="result\localhist\Lena\Lena.bmp" width="30%">
+(o)<img src="HW1_test_image/Lena.bmp" width="30%">
+(g)<img src="result/globalhist/Lena/Lena.bmp" width="30%">
+(l)<img src="result/localhist/Lena/Lena.bmp" width="30%">
 
 (o)origin  (g)global histogram equalization (l)local histogram equalization(16 blocks)
 
 原始與轉換後的 pixels 的histogram (global):
 
-<img src="result\globalhist\Lena\histogram.jpg" width="50%">
+<img src="result/globalhist/Lena/histogram.jpg" width="50%">
 
 原始與轉換後的 pixels 的histogram (local):
 
-<img src="result\localhist\Lena\histogramall.jpg" width="50%">
+<img src="result/localhist/Lena/histogramall.jpg" width="50%">
 
 原始與轉換後的 pixels 的histogram (local) (each block):
 
-<img src="result\localhist\Lena\histogram0.jpg" width="80%">
-<img src="result\localhist\Lena\histogram8.jpg" width="80%">
+<img src="result/localhist/Lena/histogram0.jpg" width="80%">
+<img src="result/localhist/Lena/histogram8.jpg" width="80%">
 
 <div style="break-after: page; page-break-after: always;"></div>
 
 ### Peppers:
 
-(o)<img src="HW1_test_image\Peppers.bmp" width="30%">
-(g)<img src="result\globalhist\Peppers\Peppers.bmp" width="30%">
-(l)<img src="result\localhist\Peppers\Peppers.bmp" width="30%">
+(o)<img src="HW1_test_image/Peppers.bmp" width="30%">
+(g)<img src="result/globalhist/Peppers/Peppers.bmp" width="30%">
+(l)<img src="result/localhist/Peppers/Peppers.bmp" width="30%">
 
 (o)origin  (g)global histogram equalization (l)local histogram equalization(16 blocks)
 
 原始與轉換後的 pixels 的histogram:
 
-<img src="result\globalhist\Peppers\histogram.jpg" width="50%">
+<img src="result/globalhist/Peppers/histogram.jpg" width="50%">
 
 原始與轉換後的 pixels 的histogram (local):
 
-<img src="result\localhist\Peppers\histogramall.jpg" width="50%">
+<img src="result/localhist/Peppers/histogramall.jpg" width="50%">
 
 
 原始與轉換後的 pixels 的histogram (local) (each block):
 
-<img src="result\localhist\Peppers\histogram0.jpg" width="80%">
-<img src="result\localhist\Peppers\histogram8.jpg" width="80%">
+<img src="result/localhist/Peppers/histogram0.jpg" width="80%">
+<img src="result/localhist/Peppers/histogram8.jpg" width="80%">
 
 <div style="break-after: page; page-break-after: always;"></div>
 
