@@ -82,13 +82,9 @@ def read_test_images(root)->list:
         
     return imginfo
 
-def main():
-    testimgs_info = read_test_images(
-        root=os.path.join("HW2_test_image")
-    )
+def main(testimgroot, resultroot):
     
-    resultroot = makepath(os.path.join("result"))
-
+    testimgs_info = read_test_images(testimgroot)
     Sharpler=IMGSharpler()
     
     A = [1.0 ,1.5, 1.7, 2.0]
@@ -118,6 +114,10 @@ def main():
             ret = cv2.imwrite(
                 os.path.join(s4, f"A{a*10:.0f}{imginfo['fname']}"),e
             )
+            if imginfo['fname'][-3:] != 'bmp':
+                ret = cv2.imwrite(
+                os.path.join(s4, f"A{a*10:.0f}{imginfo['fname'][:-3]}bmp"),e
+            )
         
         
         print("Mask center = -8 : ")
@@ -134,9 +134,18 @@ def main():
         for e1, a in zip(e1list, A):
             ret = cv2.imwrite(
                 os.path.join(s8, f"A{a*10:.0f}{imginfo['fname']}"),e1
-            )  
+            ) 
+            if imginfo['fname'][-3:] != 'bmp':
+                ret = cv2.imwrite(
+                os.path.join(s8, f"A{a*10:.0f}{imginfo['fname'][:-3]}bmp"), e1
+            ) 
         
         
 
 if __name__ == "__main__":
-    main()
+    
+    testimgroot=os.path.join("HW2_test_image")
+    resultroot = makepath(os.path.join("result"))
+    
+    
+    main(testimgroot=testimgroot, resultroot=resultroot)
