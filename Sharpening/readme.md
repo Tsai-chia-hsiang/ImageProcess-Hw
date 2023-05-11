@@ -24,35 +24,33 @@
   首先我先將圖片外圍一圈做 zero padding( ```Conv2D().padding()``` )。
 
 
-  直接使用兩個 for-loop 效能太低，為了提升速度，我將 mask 要運作的每個 blocks 先建構出來，為一個 
-  
-  $$/text{Blocks, size} = (M+1)/times (N+1) /times [3 /times 3]$$
+  直接使用兩個 for-loop 效能太低，為了提升速度，我將 mask 要運作的每個 blocks 先建構出來，為一個 $\text{Blocks, size} = (M+1) \times (N+1) \times [3 \times 3]$
 
   之後就直接把 Blocks*mask (對應元素相乘)，再取 .sum(aixs = (2,3))，把每個block內與 mask 對應相乘後的結果相加，來實現 2D Convolution。
 
 - mask:
-  - $$/text{Laplacian Operator}$$:
+  - $\text{Laplacian Operator}$:
 
-$$/begin{bmatrix}
+$$\begin{bmatrix}
     0 & -1 & 0 //
     -1 & -4 & -1 //
     0 & -1 & 0 //
-/end{bmatrix}  /begin{bmatrix}
+\end{bmatrix}  \begin{bmatrix}
     -1 & -1 & -1 //
     -1 & -8 & -1 //
     -1 & -1 & -1 //
 /end{bmatrix}$$
 
 - Sharpening
-$$f_{hb}(x,y) = Af(x,y)-/text{Laplacian}*f(x,y)$$
+$$f_{hb}(x,y) = Af(x,y)-\text{Laplacian}*f(x,y)$$
 
 化簡後，即為:
 
-$$ f_{hb} = /begin{bmatrix}
+$$ f_{hb} = \begin{bmatrix}
     0 & -1 & 0 //
     -1 & A+4 & -1 //
     0 & -1 & 0 //
-/end{bmatrix} * f(x,y)$$
+\end{bmatrix} * f(x,y)$$
 
 $$ f_{hb} =  /begin{bmatrix}
     -1 & -1 & -1 //
