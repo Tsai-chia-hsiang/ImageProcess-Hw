@@ -36,7 +36,7 @@ $$\begin{bmatrix}
     0 & -1 & 0 \\
     -1 & -4 & -1 \\
     0 & -1 & 0 \\
-\end{bmatrix}  \begin{bmatrix}
+\end{bmatrix} , \begin{bmatrix}
     -1 & -1 & -1 \\
     -1 & -8 & -1 \\
     -1 & -1 & -1 \\
@@ -53,11 +53,11 @@ $$ f_{hb} = \begin{bmatrix}
     0 & -1 & 0 \\
 \end{bmatrix} * f(x,y)$$
 
-$$ f_{hb} =  /begin{bmatrix}
+$$ f_{hb} =  \begin{bmatrix}
     -1 & -1 & -1 \\
     -1 & A+8 & -1 \\
     -1 & -1 & -1 \\
-/end{bmatrix} * f(x,y)$$
+\end{bmatrix} * f(x,y)$$
 
 我的程式碼即是依照化簡後的公式撰寫。 ( ```IMGSharpler.Laplacian_Sharpening()``` )
 
