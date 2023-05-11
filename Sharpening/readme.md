@@ -31,6 +31,7 @@
 - mask:
   - $\text{Laplacian Operator}$:
 
+
 $$\begin{bmatrix}
     0 & -1 & 0 //
     -1 & -4 & -1 //
@@ -39,7 +40,7 @@ $$\begin{bmatrix}
     -1 & -1 & -1 //
     -1 & -8 & -1 //
     -1 & -1 & -1 //
-/end{bmatrix}$$
+\end{bmatrix}$$
 
 - Sharpening
 $$f_{hb}(x,y) = Af(x,y)-\text{Laplacian}*f(x,y)$$
