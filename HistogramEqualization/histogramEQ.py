@@ -33,17 +33,19 @@ class GrayLevel_histogramEqualizer :
 
         p = self.__count(img=img)
         cdf= np.cumsum(p/img.size)
-        hist = (np.floor(cdf*255)).astype(np.uint8)
+        hist = (np.clip(cdf*255, 0, 255)).astype(np.uint8)
         return p, hist
     
     def __global_hiseq(self, img:np.ndarray, need_hist=False)->tuple:
         
         h0, histogram = self.__hiseq(img=img)
-        img_hiseq = np.copy(img)
-        for pixel_val, hist_val in enumerate(histogram):
-            row, col = np.where(img == pixel_val)
-            img_hiseq[row, col]=hist_val
+        m,n = img.shape
+        img_hiseq = np.zeros((m*n), dtype=np.uint8)
+        for i,pi in enumerate(img.flatten()):
+            img_hiseq[i] = histogram[pi]
         
+        img_hiseq = img_hiseq.reshape((m,n))
+       
         if not need_hist:
             return img_hiseq
         
