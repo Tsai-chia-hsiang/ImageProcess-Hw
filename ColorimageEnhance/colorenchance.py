@@ -2,12 +2,12 @@ import os
 from tqdm import tqdm
 from ColorIMGkit.cimgcvtr import DomainConvertor as dcvtor
 from ColorIMGkit.histEQ import ColorHistEQ
-from ColorIMGkit.sharpening import RGBSharpler
+from ColorIMGkit.sharpening import RGBSharpener
 from ColorIMGkit.RGBimgIO import readimgs, saveimgs, rgbimg
 
 converter = dcvtor()
 histeq = ColorHistEQ()
-rgbsharpler = RGBSharpler()
+rgbsharpler = RGBSharpener()
 
 
 def makepath(p):
@@ -41,8 +41,8 @@ def RGBSharpening(imgs_, strong_mask=False):
 
 
 if __name__ == "__main__":
-    
-    imgs = readimgs(imgdir=os.path.join("HW3_test_image"))
+    testimgsdir =os.path.join("HW3_test_image")
+    imgs = readimgs(imgdir=testimgsdir)
     resultdir = makepath(os.path.join("result"))
 
     rgbhis= HistorgramEQ(imgs_=imgs, domain="rgb")

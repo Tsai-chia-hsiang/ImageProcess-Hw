@@ -27,7 +27,7 @@ def Conv2D(img:np.ndarray, mask:np.ndarray)->np.ndarray:
     return ((blocks*mask).sum(axis=(2,3)))
 
 
-class Sharpler():
+class Sharpener():
     
     def __init__(self) -> None:
         
@@ -57,7 +57,7 @@ class Sharpler():
         return e
 
 
-class RGBSharpler(Sharpler):
+class RGBSharpener(Sharpener):
     def __init__(self) -> None:
         super().__init__()
     
