@@ -29,7 +29,7 @@ def Conv2D(img:np.ndarray, mask:np.ndarray)->np.ndarray:
     return ((blocks*mask).sum(axis=(2,3)))
 
 
-class IMGSharpler():
+class IMGSharpener():
     
     def __init__(self) -> None:
         
@@ -85,7 +85,7 @@ def read_test_images(root)->list:
 def main(testimgroot, resultroot):
     
     testimgs_info = read_test_images(testimgroot)
-    Sharpler=IMGSharpler()
+    Sharpener=IMGSharpener()
     
     A = [1.0 ,1.5, 1.7, 2.0]
     print(f"Using High boost filter : A = {A} ")
@@ -102,7 +102,7 @@ def main(testimgroot, resultroot):
         elist = []
         for a in A:
             elist.append( 
-                Sharpler.Laplacian_Sharpening(
+                Sharpener.Laplacian_Sharpening(
                     img=imginfo['img'] , strong_mask=False, A=a
                 )
             )
@@ -124,7 +124,7 @@ def main(testimgroot, resultroot):
         e1list = []
         for a in A:
             e1list.append( 
-                Sharpler.Laplacian_Sharpening(
+                Sharpener.Laplacian_Sharpening(
                     img=imginfo['img'], strong_mask=True, A=a
                 )
             )
