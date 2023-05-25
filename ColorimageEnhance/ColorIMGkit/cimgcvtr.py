@@ -13,14 +13,33 @@ class DomainConvertor():
     def __init__(self) -> None:
 
         self.__eps = np.float64(1e-17)
+
+        self.__Mrgb2xyz = np.array(
+            [
+                [0.4124564, 0.3575761, 0.1804375],
+                [0.2126729, 0.7151522, 0.0721750],
+                [0.0193339, 0.1191920, 0.9503041]
+            ], dtype=np.float64
+        )
+
+        self.__Xw = 0.950467
+        self.__Yw = 1.0
+        self.__Zw = 1.088969
+        
+        self.__Mxyz2rgb = np.array(
+            [
+                [ 3.24045484, -1.53713885, -0.49853155],
+                [-0.96926639,  1.87601093,  0.04155608],
+                [ 0.05564342, -0.20402585,  1.05722516]
+            ], dtype=np.float64)
+
         self.__convertor = [
-            [0,self.__rgb2hsi,self.__rgb2lab],
-            [self.__hsi2rgb,0,-1],
-            [self.__lab2rgb,-1, 0]
+            [0, self.__rgb2hsi, self.__rgb2lab],
+            [self.__hsi2rgb, 0, -1],
+            [self.__lab2rgb, -1, 0]
         ]
  
     def convert(self, img, fromD, toD)->np.ndarray:
-    
         cvtimg = None
 
         if self.__convertor[fromD][toD] == 0:
@@ -97,11 +116,53 @@ class DomainConvertor():
               np.clip(G*255, 0 ,255).astype(np.uint8),
               np.clip(B*255, 0 ,255).astype(np.uint8))
             )
+    
+    def __rgb2xyz(self, img:np.ndarray)->np.ndarray:
+        return (img.astype(np.float64)/255.0)@self.__Mrgb2xyz.T
+    
+    def __xyz2rgb(self, img:np.ndarray)->np.ndarray:
+        return np.clip((img@self.__Mxyz2rgb.T)*255, 0, 255).astype(np.uint8)
+    
+    def __xyz2lab(self, img:np.ndarray)->np.ndarray:
+        def h(q:np.ndarray)->np.ndarray:
+            cub_sqrt_idx = np.where(q > 0.008856)
+            other = np.where(q <= 0.008856)
+            hq = np.zeros(q.shape, dtype=np.float64)
+            hq[cub_sqrt_idx] = q[cub_sqrt_idx]**(1/3)
+            hq[other] = 7.787*q[other] + 16/116
+            return hq
+        hx = h(img[..., 0]/self.__Xw)
+        hy = h(img[..., 1]/self.__Yw)
+        hz = h(img[..., 2]/self.__Zw)
+        L = 116.0*hy-16.0
+        a = 500.0*(hx-hy)
+        b = 200.0*(hy-hz)
+        return np.dstack([L, a, b])
+
+    def __lab2xyz(self, img:np.ndarray)->np.ndarray:
         
+        def h(q:np.ndarray, w)->np.ndarray:
+            cub_idx = np.where(q >= 0.008856)
+            other = np.where(q < 0.008856)
+            hq = np.zeros(q.shape, dtype=np.float64)
+            hq[cub_idx] = (q[cub_idx]**3)*w
+            hq[other] = ((q[other]-16)/116)*3*(0.008856**2)*w
+            return hq
+        
+        fy = (img[..., 0]+16)/116
+        fx = (img[..., 1]/500)+fy
+        fz = fy - (img[..., 2]/200)
+    
+        return np.dstack([h(fx, self.__Xw), h(fy, self.__Yw), h(fz,self.__Zw)])
+    
     def __rgb2lab(self, img:np.ndarray)->np.ndarray:
-            pass
         
+        xyz = self.__rgb2xyz(img)
+        return self.__xyz2lab(xyz)
+
     def __lab2rgb(self, img:np.ndarray)->np.ndarray:
-            pass
+        
+        xyz = self.__lab2xyz(img)
+        return self.__xyz2rgb(xyz)
     
 
