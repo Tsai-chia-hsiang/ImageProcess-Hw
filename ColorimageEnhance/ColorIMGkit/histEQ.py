@@ -3,13 +3,15 @@ from .cimgcvtr import supportdomain
 
 rgb = supportdomain.rgb
 hsi = supportdomain.hsi
+lab = supportdomain.lab
+
 
 class HistogramEqualizer :
     
     def __init__(self) -> None:
         pass
     
-    def transform(self, img:np.ndarray, spatial="global", needhist=False, **kwarg)->np.ndarray:
+    def transform(self, img:np.ndarray, spatial="global", needhist=False, upperbound=255, **kwarg)->np.ndarray:
 
         if spatial == "global":
             return self.__global_hiseq(
@@ -21,23 +23,23 @@ class HistogramEqualizer :
                 bsize=kwarg['bsize']
             )
 
-    def __count(self, img:np.ndarray)->np.ndarray:
+    def __count(self, img:np.ndarray, upperbound=255)->np.ndarray:
         """
         return p[rk] = nk
         """ 
-        p = np.bincount(img.flatten(), minlength=256)
+        p = np.bincount(img.flatten(), minlength=upperbound+1)
         return p
     
-    def __hiseq(self,img:np.ndarray)->np.ndarray:
+    def __hiseq(self,img:np.ndarray, upperbound=255)->np.ndarray:
 
         p = self.__count(img=img)
         cdf= np.cumsum(p/img.size)
-        hist = (np.clip(cdf*255, 0, 255)).astype(np.uint8)
+        hist = (np.clip(cdf*upperbound, 0, upperbound)).astype(np.uint8)
         return p, hist
     
-    def __global_hiseq(self, img:np.ndarray, need_hist=False)->tuple:
+    def __global_hiseq(self, img:np.ndarray, need_hist=False, upperbound=255)->tuple:
         
-        h0, histogram = self.__hiseq(img=img)
+        h0, histogram = self.__hiseq(img=img, upperbound=upperbound)
         m,n = img.shape
         img_hiseq = np.zeros((m*n), dtype=np.uint8)
         for i,pi in enumerate(img.flatten()):
@@ -50,10 +52,10 @@ class HistogramEqualizer :
         
         return {
             'origin':h0.astype(np.uint16).tolist(), 
-            'transform':self.__count(img_hiseq).astype(np.uint16).tolist()
+            'transform':self.__count(img_hiseq, upperbound=upperbound).astype(np.uint16).tolist()
         }, img_hiseq
 
-    def __local_hiseq(self, img:np.ndarray,bsize:int, need_hist=False)->tuple:
+    def __local_hiseq(self, img:np.ndarray,bsize:int, need_hist=False,upperbound=255)->tuple:
     
         img_hiseq=np.copy(img)
         hist = []
@@ -63,10 +65,10 @@ class HistogramEqualizer :
                 subimg = img[i:i+bsize, j:j+bsize]
                 subimg_ = None
                 if need_hist:
-                    b_h0, subimg_=self.__global_hiseq(img=subimg, need_hist=need_hist)
+                    b_h0, subimg_=self.__global_hiseq(img=subimg, need_hist=need_hist, upperbound=upperbound)
                     hist.append(b_h0)
                 else: 
-                    subimg_=self.__global_hiseq(img=subimg, need_hist=need_hist)
+                    subimg_=self.__global_hiseq(img=subimg, need_hist=need_hist, upperbound=upperbound)
                 
                 img_hiseq[i:i+bsize, j:j+bsize] = subimg_
                 
@@ -89,18 +91,7 @@ class ColorHistEQ(HistogramEqualizer):
     def transform(self, img: np.ndarray, spatial="global", domain=hsi, **kwarg) -> np.ndarray:
     
         img_ = img.copy()
-
-        if domain == hsi:
-            c = [2]
-            if 'required_channel' in kwarg.keys():
-                c = kwarg['required_channel']
-            
-            for ci in c:
-                img_[..., ci] =  self.__01_hist(
-                    img_[..., ci], spatial=spatial, **kwarg
-                )
-        
-        elif domain == rgb:
+        if domain == rgb :
             if 'waring' in kwarg.keys():
                 if kwarg['waring']:
                     print("Warning ! may get pesudo color")
@@ -112,7 +103,23 @@ class ColorHistEQ(HistogramEqualizer):
                     super().transform(img[..., 2],spatial)
                 ]
             )
-
+        elif domain == hsi:
+            
+            if domain == hsi:
+                c = [2]
+            
+            
+            if 'required_channel' in kwarg.keys():
+                c = kwarg['required_channel']
+            
+            for ci in c:
+                img_[..., ci] =  self.__01_hist(
+                    img_[..., ci], spatial=spatial, **kwarg
+                )
+        elif domain == lab:
+            img_[..., 0] = super().transform(
+                img[...,0].astype(np.uint8),upperbound=256
+            ).astype(np.float64)
         return img_
 
     def __01_hist(self, x, spatial="global", **kwarg)->np.ndarray:
