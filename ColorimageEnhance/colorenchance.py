@@ -14,6 +14,7 @@ convertor = DomainConvertor()
 histeq = ColorHistEQ()
 rgbsharpener = RGBSharpener()
 
+
 def makepath(p):
     if not os.path.exists(p):
         os.mkdir(p)
@@ -48,11 +49,26 @@ def Batch_imgs_processing(imgs, apply_method, apply_domain, given_domain=rgb, *a
 def sigmoid(x):
     return 1/(1+np.exp(-x))
 
-if __name__ == "__main__":
-    testimgsdir =os.path.join("HW3_test_image")
-    imgs = readimgs(imgdir=testimgsdir)
+def test_domain_converting(imgs, wanted_d=[hsi, lab]):
+
+    def testconvert(imgs, domain):
+        print(f"test {domain}")
+        return Batch_imgs_processing(imgs,lambda x:x, domain, rgb )
+
+    domain_code= {
+        1:"hsi",2:"lab"
+    }
+    testdir= makepath(os.path.join("testing"))
+    for d in wanted_d:
+        saveimgs(
+            imgs=testconvert(imgs, domain=d), 
+            savepath=makepath(os.path.join(testdir,domain_code[d]))
+        )
+
+
+def main(imgs):
+
     resultdir = makepath(os.path.join("result"))
-    
     print("HistEQ on RGB")
     rgbhis= Batch_imgs_processing(
         imgs, histeq.transform, 
@@ -119,3 +135,24 @@ if __name__ == "__main__":
     )
     saveimgs(imgs=hsihis_sharpen, savepath=makepath(os.path.join(resultdir,"Hist_N_sharp")))
     print("="*50)
+    
+
+    print("HistEQ on L of L*a*b*")
+    labhist = Batch_imgs_processing(
+        imgs, histeq.transform, 
+        lab, rgb,
+        "global", lab
+    )
+    saveimgs(imgs=labhist, savepath=makepath(os.path.join(resultdir,"Hist_Lab")))
+    print("="*50)
+
+
+if __name__ == "__main__":
+
+    imgs = readimgs(imgdir=os.path.join("HW3_test_image"))
+    
+    test_domain_converting(imgs=imgs)
+    
+    #main(imgs=imgs)   
+     
+    
