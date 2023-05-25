@@ -1,4 +1,8 @@
 import numpy as np
+from .cimgcvtr import supportdomain
+
+rgb = supportdomain.rgb
+hsi = supportdomain.hsi
 
 class HistogramEqualizer :
     
@@ -82,17 +86,21 @@ class ColorHistEQ(HistogramEqualizer):
     def __init__(self) -> None:
         super().__init__()
     
-    def transform(self, img: np.ndarray, spatial="global", domain='hsi', **kwarg) -> np.ndarray:
-        
+    def transform(self, img: np.ndarray, spatial="global", domain=hsi, **kwarg) -> np.ndarray:
+    
         img_ = img.copy()
 
-        if domain == "hsi":
-            img_[...,2] =  super().transform(
-                (img[...,2]*255).astype(np.uint8), 
-                spatial, **kwarg
-            ).astype(np.float64)/255.0
+        if domain == hsi:
+            c = [2]
+            if 'required_channel' in kwarg.keys():
+                c = kwarg['required_channel']
+            
+            for ci in c:
+                img_[..., ci] =  self.__01_hist(
+                    img_[..., ci], spatial=spatial, **kwarg
+                )
         
-        elif domain == 'rgb':
+        elif domain == rgb:
             if 'waring' in kwarg.keys():
                 if kwarg['waring']:
                     print("Warning ! may get pesudo color")
@@ -106,3 +114,8 @@ class ColorHistEQ(HistogramEqualizer):
             )
 
         return img_
+
+    def __01_hist(self, x, spatial="global", **kwarg)->np.ndarray:
+        return super().transform(
+                (x*255).astype(np.uint8), spatial, **kwarg
+            ).astype(np.float64)/255.0

@@ -58,10 +58,11 @@ class Sharpener():
 
 
 class RGBSharpener(Sharpener):
+    
     def __init__(self) -> None:
         super().__init__()
     
-    def Laplacian_Sharpening(self, img: np.ndarray, strong_mask=False, A=1) -> np.ndarray:
+    def Laplacian_Sharpening(self, img: np.ndarray, strong_mask=False, A=1, **kwarg) -> np.ndarray:
         
         img_ = np.dstack(
             [

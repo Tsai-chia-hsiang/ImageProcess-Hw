@@ -1,49 +1,64 @@
 import numpy as np
+from tqdm import tqdm
+
+class SupportDomain:
+    rgb = 0
+    hsi = 1
+    lab = 2
+
+supportdomain = SupportDomain()
 
 class DomainConvertor():
     
     def __init__(self) -> None:
 
         self.__eps = np.float64(1e-17)
-        self.__converter = {
-            "rgb2hsi":self.__rgb2hsi,
-            "hsi2rgb":self.__hsi2rgb,
-            "rgb2lab":self.__rgb2lab,
-            "lab2rgb":self.__lab2rgb
-        }
+        self.__convertor = [
+            [0,self.__rgb2hsi,self.__rgb2lab],
+            [self.__hsi2rgb,0,-1],
+            [self.__lab2rgb,-1, 0]
+        ]
+ 
+    def convert(self, img, fromD, toD)->np.ndarray:
     
-    def convert(self, img, fromD, toD):
-    
-        if fromD == toD:
-            return img
-    
-        c = f"{fromD}2{toD}"
-        #print(c)
-        return self.__converter[c](img)
-    
-    def __rgb2hsi(self, img:np.ndarray):
+        cvtimg = None
 
-            rgb = img.astype(np.float64) / 255.0
-            # 0: R, 1:G, 2:B
-            R, G, B = 0, 1, 2
-            DRG = rgb[..., R] - rgb[..., G]
-            DRB = rgb[..., R] - rgb[..., B]
-            DGB = rgb[..., G] - rgb[..., B]
-            RGBSUM = np.sum(rgb, axis=2)
-            shiftphasoridx = np.where(DGB < 0)
-            as_zero_theta = np.where((DRG**2 + (DRB) * (DGB)) == 0.0)
-            H = np.arccos(
-                0.5 * (DRG + DRB) / (
-                    (DRG**2 + (DRB) * (DGB)) ** 0.5 + self.__eps
-                )
+        if self.__convertor[fromD][toD] == 0:
+            cvtimg = img.copy()
+        
+        elif self.__convertor[fromD][toD] == -1:
+            cvtimg = self.__convertor[0][toD](
+                self.__convertor[fromD][0](img)
             )
-            H[shiftphasoridx] = 2 * np.pi - H[shiftphasoridx]
-            H[as_zero_theta] = 0
-            I = (RGBSUM) / 3
-            S = 1 - (3 / (RGBSUM + self.__eps)) * np.min(rgb, axis=2)
-            return np.dstack((H, S, I))
+        
+        else:
+            cvtimg = self.__convertor[fromD][toD](img)
+        
+        return cvtimg
+    
+    def __rgb2hsi(self, img:np.ndarray)->np.ndarray:
 
-    def __hsi2rgb(self, img:np.ndarray):
+        rgb = img.astype(np.float64) / 255.0
+        # 0: R, 1:G, 2:B
+        R, G, B = 0, 1, 2
+        DRG = rgb[..., R] - rgb[..., G]
+        DRB = rgb[..., R] - rgb[..., B]
+        DGB = rgb[..., G] - rgb[..., B]
+        RGBSUM = np.sum(rgb, axis=2)
+        shiftphasoridx = np.where(DGB < 0)
+        as_zero_theta = np.where((DRG**2 + (DRB) * (DGB)) == 0.0)
+        H = np.arccos(
+            0.5 * (DRG + DRB) / (
+                (DRG**2 + (DRB) * (DGB)) ** 0.5 + self.__eps
+            )
+        )
+        H[shiftphasoridx] = 2 * np.pi - H[shiftphasoridx]
+        H[as_zero_theta] = 0
+        I = (RGBSUM) / 3
+        S = 1 - (3 / (RGBSUM + self.__eps)) * np.min(rgb, axis=2)
+        return np.dstack((H, S, I))
+
+    def __hsi2rgb(self, img:np.ndarray)->np.ndarray:
             
         def cvt(h0,s,i, theta):
             h = h0 - theta
@@ -83,11 +98,10 @@ class DomainConvertor():
               np.clip(B*255, 0 ,255).astype(np.uint8))
             )
         
-    def __rgb2lab(self, img:np.ndarray):
+    def __rgb2lab(self, img:np.ndarray)->np.ndarray:
             pass
         
-    def __lab2rgb(self, img:np.ndarray):
+    def __lab2rgb(self, img:np.ndarray)->np.ndarray:
             pass
-
-
     
+
