@@ -15,7 +15,7 @@ class HistogramEqualizer :
 
         if spatial == "global":
             return self.__global_hiseq(
-                img=img,need_hist=needhist
+                img=img,need_hist=needhist, upperbound=upperbound
             )
         elif spatial == "local":
             return self.__local_hiseq(
@@ -90,39 +90,37 @@ class ColorHistEQ(HistogramEqualizer):
     
     def transform(self, img: np.ndarray, spatial="global", domain=hsi, **kwarg) -> np.ndarray:
     
-        img_ = img.copy()
+        c = None
+        normalize = 1
+        
         if domain == rgb :
             if 'waring' in kwarg.keys():
                 if kwarg['waring']:
                     print("Warning ! may get pesudo color")
             
-            img_ = np.dstack(
-                [
-                    super().transform(img[..., 0],spatial),
-                    super().transform(img[..., 1],spatial),
-                    super().transform(img[..., 2],spatial)
-                ]
-            )
+            c = np.arange(3)
+
         elif domain == hsi:
             
             if domain == hsi:
                 c = [2]
-            
-            
             if 'required_channel' in kwarg.keys():
                 c = kwarg['required_channel']
-            
-            for ci in c:
-                img_[..., ci] =  self.__01_hist(
-                    img_[..., ci], spatial=spatial, **kwarg
-                )
+            normalize = 255
+        
         elif domain == lab:
-            img_[..., 0] = super().transform(
-                img[...,0].astype(np.uint8),upperbound=256
-            ).astype(np.float64)
-        return img_
+            c = [0]
+            normalize = 255/100
+        
+        return self.__c_by_c_hist(
+            img=img, c=c, 
+            normalize=normalize, spatial=spatial, **kwarg
+        )
 
-    def __01_hist(self, x, spatial="global", **kwarg)->np.ndarray:
-        return super().transform(
-                (x*255).astype(np.uint8), spatial, **kwarg
-            ).astype(np.float64)/255.0
+    def __c_by_c_hist(self, img, c, normalize=255, spatial="global", **kwarg)->np.ndarray:
+        img_ = img.copy()
+        for ci in c:
+            img_[..., ci] = super().transform(
+                (img_[..., ci]*normalize).astype(np.uint8), spatial, **kwarg
+            ).astype(np.float64)/normalize
+        return img_
