@@ -3,7 +3,7 @@
 資工四 408410098 蔡嘉祥
 
 - date due : 6/5
-- date handed in : 
+- date handed in : 5/26
 <div style="break-after: page; page-break-after: always;"></div>
 
 ## <center>Technical description</center>
@@ -42,13 +42,13 @@
 
 ### Histogram Eqaulization on RGB directly
 
-<img src="./forreport/HistEQ_RGB.jpg" width="75%">
+<img src="./forreport/HistEQ_RGB.jpg" width="65%">
 
 由於 RGB 較不接近 Basis, 所以有時候直接做 histogram equalization 會出現 pesudo color 的情況。例如: house.jpg 跟 kitchen.jpg
 
 ### Histogram Eqaulization on I of HSI
 
-<img src="./forreport/HistEQ_I.jpg" width="75%">
+<img src="./forreport/HistEQ_I.jpg" width="65%">
 
 相比於 RGB，在 HSI 的 I 上做比較接近原顏色 (H 不動)。
 
@@ -60,13 +60,13 @@
 
 將 R, G, B 三個 channels 分別做 Laplacian operation
 
-<img src="./forreport/RGBsharpening.jpg" width="75%">
+<img src="./forreport/RGBsharpening.jpg" width="65%">
 
 ### Sharpening on RGB & Histogram Equalization on I
 
 將做過 sharpening 後的 RGB 轉 HSI 並對 I 做 Histogram Equalization 。
 
-<img src="./forreport/Hist_N_sharp.jpg" width="75%">
+<img src="./forreport/Hist_N_sharp.jpg" width="65%">
 
 
 <div style="break-after: page; page-break-after: always;"></div>
@@ -77,11 +77,11 @@
 
 使用 $S'=(1*S)^{0.5}$
 
-<img src="./forreport/gmma_a1_05.jpg" width="40%">
+<img src="./forreport/gmma_a1_05.jpg" width="35%">
 
 從圖可以看到，使用 $(\text{A},\gamma)=(1,0.5)$ 這組參數會將 S 較低，也就是較接近黑的部分拉的較飽和；而 S 越大，改善幅度就越小。
 
-<img src="./forreport/Gamma.jpg" width="75%">
+<img src="./forreport/Gamma.jpg" width="65%">
 
 ### Histogram Equalization on I & Gamma Correction on S
 
@@ -89,14 +89,14 @@
 - I : Histogram Equalization
 - S : Gamma Correction
 
-<img src="./forreport/HistEQ_I_Ga.jpg" width="75%">
+<img src="./forreport/HistEQ_I_Ga.jpg" width="65%">
 
 
 <div style="break-after: page; page-break-after: always;"></div>
 
 ### Histogram Equalization on L\* of L\*a\*b\*
 
-<img src="./forreport/Hist_Lab.jpg" width="75%">
+<img src="./forreport/Hist_Lab.jpg" width="65%">
 
 從視覺效果上來看，在 CIELAB domain 上做 Histogram Eqaulzation 轉回 RGB 後，對比的部分比在 HSI 的 I 上做更為明顯。
 
