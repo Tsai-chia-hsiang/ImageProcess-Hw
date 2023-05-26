@@ -106,7 +106,7 @@ def main(imgs):
     print("Sharpening on RGB & Hist on I of HSI")
     _ = Batch_imgs_processing(
         sharpening, histeq.transform, 
-        hsi, rgb, makepath(os.path.join(resultdir,"Hist_N_sharp")),
+        hsi, rgb, makepath(os.path.join(resultdir,"HistEQ_N_sharp")),
         "global", hsi
     )
     print("="*50)
@@ -115,7 +115,7 @@ def main(imgs):
     print("HistEQ on L of L*a*b*")
     _ = Batch_imgs_processing(
         imgs, histeq.transform, 
-        lab, rgb, makepath(os.path.join(resultdir,"Hist_Lab")),
+        lab, rgb, makepath(os.path.join(resultdir,"HistEQ_Lab")),
         "global", lab
     )
     print("="*50)
