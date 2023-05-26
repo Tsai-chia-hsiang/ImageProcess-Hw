@@ -65,7 +65,7 @@ class DomainConvertor():
         DGB = rgb[..., G] - rgb[..., B]
         RGBSUM = np.sum(rgb, axis=2)
         shiftphasoridx = np.where(DGB < 0)
-        as_zero_theta = np.where((DRG**2 + (DRB) * (DGB)) == 0.0)
+        as_zero_theta = np.where((DRG**2 + (DRB) * (DGB)) <= self.__eps)
         H = np.arccos(
             0.5 * (DRG + DRB) / (
                 (DRG**2 + (DRB) * (DGB)) ** 0.5 + self.__eps
@@ -74,7 +74,8 @@ class DomainConvertor():
         H[shiftphasoridx] = 2 * np.pi - H[shiftphasoridx]
         H[as_zero_theta] = 0
         I = (RGBSUM) / 3
-        S = 1 - (3 / (RGBSUM + self.__eps)) * np.min(rgb, axis=2)
+        S = 1 - (3*np.min(rgb, axis=2) / (RGBSUM + self.__eps))
+        S[np.where(np.min(rgb, axis=2) <= self.__eps)] = 0.0 
         return np.dstack((H, S, I))
 
     def __hsi2rgb(self, img:np.ndarray)->np.ndarray:
@@ -112,9 +113,9 @@ class DomainConvertor():
                 R[mask],G[mask],B[mask] = C2, C0, C1
         
         return np.dstack(
-             (np.clip(R*255, 0 ,255).astype(np.uint8),
+             [np.clip(R*255, 0 ,255).astype(np.uint8),
               np.clip(G*255, 0 ,255).astype(np.uint8),
-              np.clip(B*255, 0 ,255).astype(np.uint8))
+              np.clip(B*255, 0 ,255).astype(np.uint8)]
             )
     
     def __rgb2xyz(self, img:np.ndarray)->np.ndarray:
