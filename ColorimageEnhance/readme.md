@@ -40,19 +40,23 @@
 
 本報告結果附在 ```./result/``` 裡面
 
-### Histogram Eqaulization on RGB directly
+### Histogram Eqaulization 
+<img src="./forreport/origin.jpg" width="48%">
+<img src="./forreport/HistEQ_RGB.jpg" width="48%">
+<img src="./forreport/HistEQ_I.jpg" width="48%">
+<img src="./forreport/Hist_Lab.jpg" width="48%">
 
-<img src="./forreport/HistEQ_RGB.jpg" width="65%">
+- RGB : 
+  
+  由於 RGB 較不接近 Basis, 所以有時候直接做 histogram equalization 會出現 pesudo color 的情況。例如: house.jpg 跟 kitchen.jpg
+- HSI :
+  
+  相比於 RGB，在 HSI 的 I 上做比較接近原顏色 (H 不動)。
 
-由於 RGB 較不接近 Basis, 所以有時候直接做 histogram equalization 會出現 pesudo color 的情況。例如: house.jpg 跟 kitchen.jpg
-
-### Histogram Eqaulization on I of HSI
-
-<img src="./forreport/HistEQ_I.jpg" width="65%">
-
-相比於 RGB，在 HSI 的 I 上做比較接近原顏色 (H 不動)。
-
-不果也能看到 Histogram EQ 在太亮的圖片效果不是很好，例如 house.jpg
+  不果也能看到 Histogram EQ 在太亮的圖片效果不是很好，例如 house.jpg
+- L\*a\*b\*:
+  
+  從視覺效果上來看，在 L\*a\*b\* 的 L\* 上做 Histogram Eqaulzation 轉回 RGB 後，對比的部分比在 HSI 的 I 上做更為明顯。
 
 <div style="break-after: page; page-break-after: always;"></div>
 
@@ -60,18 +64,17 @@
 
 將 R, G, B 三個 channels 分別做 Laplacian operation
 
-<img src="./forreport/RGBsharpening.jpg" width="65%">
+<img src="./forreport/origin.jpg" width="48%">
+<img src="./forreport/RGBsharpening.jpg" width="48%">
 
 ### Sharpening on RGB & Histogram Equalization on I
 
 將做過 sharpening 後的 RGB 轉 HSI 並對 I 做 Histogram Equalization 。
 
-<img src="./forreport/Hist_N_sharp.jpg" width="65%">
-
+<img src="./forreport/origin.jpg" width="48%">
+<img src="./forreport/Hist_N_sharp.jpg" width="48%">
 
 <div style="break-after: page; page-break-after: always;"></div>
-
-
 
 ### Gamma Correction on Saturation
 
@@ -81,7 +84,8 @@
 
 從圖可以看到，使用 $(\text{A},\gamma)=(1,0.5)$ 這組參數會將 S 較低，也就是較接近黑的部分拉的較飽和；而 S 越大，改善幅度就越小。
 
-<img src="./forreport/Gamma.jpg" width="65%">
+<img src="./forreport/origin.jpg" width="48%">
+<img src="./forreport/Gamma.jpg" width="48%">
 
 ### Histogram Equalization on I & Gamma Correction on S
 
@@ -89,16 +93,14 @@
 - I : Histogram Equalization
 - S : Gamma Correction
 
-<img src="./forreport/HistEQ_I_Ga.jpg" width="65%">
+<img src="./forreport/origin.jpg" width="48%">
+<img src="./forreport/HistEQ_I_Ga.jpg" width="48%">
 
 
 <div style="break-after: page; page-break-after: always;"></div>
 
-### Histogram Equalization on L\* of L\*a\*b\*
 
-<img src="./forreport/Hist_Lab.jpg" width="65%">
 
-從視覺效果上來看，在 CIELAB domain 上做 Histogram Eqaulzation 轉回 RGB 後，對比的部分比在 HSI 的 I 上做更為明顯。
 
 ## <center>Reference</center>
 - Ch06 投影片 
