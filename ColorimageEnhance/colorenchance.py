@@ -61,7 +61,7 @@ def test_domain_converting(imgs, wanted_d=[hsi, lab]):
 
 def main(imgs):
 
-    resultdir = makepath(os.path.join("result1"))
+    resultdir = makepath(os.path.join("result"))
     
     print("HistEQ on RGB")
     _ = Batch_imgs_processing(
