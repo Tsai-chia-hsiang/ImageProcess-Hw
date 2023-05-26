@@ -75,7 +75,7 @@ class DomainConvertor():
         H[as_zero_theta] = 0
         I = (RGBSUM) / 3
         S = 1 - (3*np.min(rgb, axis=2) / (RGBSUM + self.__eps))
-        S[np.where(np.min(rgb, axis=2) <= self.__eps)] = 0.0 
+        
         return np.dstack((H, S, I))
 
     def __hsi2rgb(self, img:np.ndarray)->np.ndarray:

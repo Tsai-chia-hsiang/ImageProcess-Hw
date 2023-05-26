@@ -63,6 +63,7 @@ def main(imgs):
 
     resultdir = makepath(os.path.join("result"))
     
+  
     print("HistEQ on RGB")
     _ = Batch_imgs_processing(
         imgs, histeq.transform, 
@@ -79,6 +80,7 @@ def main(imgs):
     )
     print("="*50)
 
+
     print("Saturation gamma correction")
     sadj = Batch_imgs_processing(
         imgs,SaturationADJ,hsi,rgb, 
@@ -86,6 +88,7 @@ def main(imgs):
         gamma_correction,1,0.5
     )
     print("="*50)
+
 
     print("Hist on HSI with Saturation gamma correction")
     _ = Batch_imgs_processing(
@@ -119,7 +122,6 @@ def main(imgs):
         "global", lab
     )
     print("="*50)
-
 
 
 if __name__ == "__main__":

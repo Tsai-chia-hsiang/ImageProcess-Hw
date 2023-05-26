@@ -89,7 +89,8 @@
 <img src="./forreport/Gamma/church.jpg" width="48%">
 <img src="./forreport/Gamma/kitchen.jpg" width="48%">
 
-- Histogram Equalization on I & Gamma Correction on S
+- Histogram Equalization on I & Gamma Correction on S :
+  
   將上述的 Histogram Equalization 跟 Gamma Correction 一起使用在 HSI domain
   - I : Histogram Equalization
   - S : Gamma Correction

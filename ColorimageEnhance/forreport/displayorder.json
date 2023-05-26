@@ -84,6 +84,10 @@
                 "result\\RGBsharpening\\aloe.jpg"
             ],
             [
+                "HistEQ on I of HSI",
+                "result\\HistEQ_I\\aloe.jpg"
+            ],
+            [
                 "sharpening on RGB & HistEQ on I of HSI",
                 "result\\HistEQ_N_sharp\\aloe.jpg"
             ]
@@ -96,6 +100,10 @@
             [
                 "sharpening on RGB",
                 "result\\RGBsharpening\\church.jpg"
+            ],
+            [
+                "HistEQ on I of HSI",
+                "result\\HistEQ_I\\church.jpg"
             ],
             [
                 "sharpening on RGB & HistEQ on I of HSI",
@@ -112,6 +120,10 @@
                 "result\\RGBsharpening\\house.jpg"
             ],
             [
+                "HistEQ on I of HSI",
+                "result\\HistEQ_I\\house.jpg"
+            ],
+            [
                 "sharpening on RGB & HistEQ on I of HSI",
                 "result\\HistEQ_N_sharp\\house.jpg"
             ]
@@ -124,6 +136,10 @@
             [
                 "sharpening on RGB",
                 "result\\RGBsharpening\\kitchen.jpg"
+            ],
+            [
+                "HistEQ on I of HSI",
+                "result\\HistEQ_I\\kitchen.jpg"
             ],
             [
                 "sharpening on RGB & HistEQ on I of HSI",
@@ -142,6 +158,10 @@
                 "result\\Gamma\\aloe.jpg"
             ],
             [
+                "HistEQ on I of HSI",
+                "result\\HistEQ_I\\aloe.jpg"
+            ],
+            [
                 "HistEQ on I and Gamma on S of HSI",
                 "result\\HistEQ_I_Ga\\aloe.jpg"
             ]
@@ -154,6 +174,10 @@
             [
                 "Gamma correction on S of HSI",
                 "result\\Gamma\\church.jpg"
+            ],
+            [
+                "HistEQ on I of HSI",
+                "result\\HistEQ_I\\church.jpg"
             ],
             [
                 "HistEQ on I and Gamma on S of HSI",
@@ -170,6 +194,10 @@
                 "result\\Gamma\\house.jpg"
             ],
             [
+                "HistEQ on I of HSI",
+                "result\\HistEQ_I\\house.jpg"
+            ],
+            [
                 "HistEQ on I and Gamma on S of HSI",
                 "result\\HistEQ_I_Ga\\house.jpg"
             ]
@@ -182,6 +210,10 @@
             [
                 "Gamma correction on S of HSI",
                 "result\\Gamma\\kitchen.jpg"
+            ],
+            [
+                "HistEQ on I of HSI",
+                "result\\HistEQ_I\\kitchen.jpg"
             ],
             [
                 "HistEQ on I and Gamma on S of HSI",
