@@ -5,10 +5,12 @@ from ColorIMGkit.cimgcvtr import DomainConvertor, supportdomain
 from ColorIMGkit.histEQ import ColorHistEQ
 from ColorIMGkit.sharpening import RGBSharpener
 from ColorIMGkit.RGBimgIO import readimgs, saveimgs, rgbimg
+from ColorIMGkit.SaturationADJ import SaturationADJ, gamma_correction
 
 rgb = supportdomain.rgb
 hsi = supportdomain.hsi
 lab = supportdomain.lab
+domain_code= {0:"rgb", 1:"hsi", 2:"lab"}
 
 convertor = DomainConvertor()
 histeq = ColorHistEQ()
@@ -20,13 +22,8 @@ def makepath(p):
         os.mkdir(p)
     return p
 
-def SaturationADJ(img, function, *arg):
-    img_ = img.copy()
-    # H,S,I
-    img_[..., 1] = function(img[..., 1], *arg)
-    return img_
-
-def Batch_imgs_processing(imgs, apply_method, apply_domain, given_domain=rgb, *arg, **kwarg)->list:
+def Batch_imgs_processing(imgs, apply_method, apply_domain, given_domain=rgb, autosave=None, *arg, **kwarg)->list:
+    
     ret = []
     pbar = tqdm(imgs)
     for img in pbar:
@@ -44,115 +41,93 @@ def Batch_imgs_processing(imgs, apply_method, apply_domain, given_domain=rgb, *a
             toD=rgb
         )
         ret.append(rgbimg(img = processed_rgbimg, name=img.name))
+    
+    if autosave is not None:
+        saveimgs(imgs=ret, savepath=autosave)
+    
     return ret
 
-def sigmoid(x):
-    return 1/(1+np.exp(-x))
 
 def test_domain_converting(imgs, wanted_d=[hsi, lab]):
-
-    def testconvert(imgs, domain):
-        print(f"test {domain}")
-        return Batch_imgs_processing(imgs,lambda x:x, domain, rgb )
-
-    domain_code= {
-        1:"hsi",2:"lab"
-    }
+      
     testdir= makepath(os.path.join("testing"))
+    
     for d in wanted_d:
-        saveimgs(
-            imgs=testconvert(imgs, domain=d), 
-            savepath=makepath(os.path.join(testdir,domain_code[d]))
+        Batch_imgs_processing(
+            imgs,lambda x:x, d, rgb,
+            makepath(os.path.join(testdir,domain_code[d]))
         )
 
 
 def main(imgs):
 
     resultdir = makepath(os.path.join("result"))
+    
     print("HistEQ on RGB")
-    rgbhis= Batch_imgs_processing(
+    _ = Batch_imgs_processing(
         imgs, histeq.transform, 
-        rgb, rgb, 
+        rgb, rgb, makepath(os.path.join(resultdir,"HistEQ_RGB")),
         "global", rgb, 
     )
-    saveimgs(
-        imgs=rgbhis, 
-        savepath=makepath(os.path.join(resultdir,"HistEQ_RGB"))
-    )
     print("="*50)
-    
+
     print("HistEQ on I of HSI")
-    hsihis = Batch_imgs_processing(
+    _ = Batch_imgs_processing(
         imgs, histeq.transform, 
-        hsi, rgb, 
+        hsi, rgb, makepath(os.path.join(resultdir,"HistEQ_I")),
         "global", hsi 
     )
-    saveimgs(
-        imgs=hsihis, 
-        savepath=makepath(os.path.join(resultdir,"HistEQ_I"))
+    print("="*50)
+
+    print("Saturation gamma correction")
+    sadj = Batch_imgs_processing(
+        imgs,SaturationADJ,hsi,rgb, 
+        makepath(os.path.join(resultdir,"Gamma")),
+        gamma_correction,1,0.5
     )
     print("="*50)
 
-    print("HistEQ on S,I of HSI")
-    hsihis_s = Batch_imgs_processing(
-        imgs, histeq.transform, 
-        hsi, rgb, 
-        "global", hsi, required_channel=[1,2]
-    )
-    saveimgs(
-        imgs=hsihis_s,
-        savepath=makepath(os.path.join(resultdir,"HistEQ_SI"))
-    )
-    print("="*50)
-
-    hsihis_sadj = Batch_imgs_processing(
-        hsihis_s,SaturationADJ,hsi,rgb,
-        sigmoid
-    )
-    saveimgs(
-        imgs=hsihis_s,
-        savepath=makepath(os.path.join(resultdir,"HistEQ_SI_sigS"))
+    print("Hist on HSI with Saturation gamma correction")
+    _ = Batch_imgs_processing(
+        sadj, histeq.transform, 
+        hsi, rgb, makepath(os.path.join(resultdir,"HistEQ_I_Ga")),
+        "global", hsi
     )
     print("="*50)
 
     print("Sharpening on RGB")
     sharpening = Batch_imgs_processing(
         imgs, rgbsharpener.Laplacian_Sharpening, 
-        rgb, rgb, 
+        rgb, rgb, makepath(os.path.join(resultdir,"RGBsharpening")),
         False
-    )
-    saveimgs(
-        imgs=sharpening, 
-        savepath=makepath(os.path.join(resultdir,"RGBsharpening"))
     )
     print("="*50)
     
     print("Sharpening on RGB & Hist on I of HSI")
-    hsihis_sharpen = Batch_imgs_processing(
+    _ = Batch_imgs_processing(
         sharpening, histeq.transform, 
-        hsi, rgb,
+        hsi, rgb, makepath(os.path.join(resultdir,"Hist_N_sharp")),
         "global", hsi
     )
-    saveimgs(imgs=hsihis_sharpen, savepath=makepath(os.path.join(resultdir,"Hist_N_sharp")))
     print("="*50)
     
 
     print("HistEQ on L of L*a*b*")
-    labhist = Batch_imgs_processing(
+    _ = Batch_imgs_processing(
         imgs, histeq.transform, 
-        lab, rgb,
+        lab, rgb, makepath(os.path.join(resultdir,"Hist_Lab")),
         "global", lab
     )
-    saveimgs(imgs=labhist, savepath=makepath(os.path.join(resultdir,"Hist_Lab")))
     print("="*50)
+
 
 
 if __name__ == "__main__":
 
     imgs = readimgs(imgdir=os.path.join("HW3_test_image"))
     
-    test_domain_converting(imgs=imgs)
+    #test_domain_converting(imgs=imgs)
     
-    #main(imgs=imgs)   
+    main(imgs=imgs)   
      
     
