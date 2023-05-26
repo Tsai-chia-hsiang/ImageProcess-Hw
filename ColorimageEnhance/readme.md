@@ -41,10 +41,10 @@
 本報告結果附在 ```./result/``` 裡面
 
 ### Histogram Eqaulization 
-<img src="./forreport/origin.jpg" width="48%">
-<img src="./forreport/HistEQ_RGB.jpg" width="48%">
-<img src="./forreport/HistEQ_I.jpg" width="48%">
-<img src="./forreport/Hist_Lab.jpg" width="48%">
+<img src="./forreport/HistEQ/aloe.jpg" width="48%">
+<img src="./forreport/HistEQ/house.jpg" width="48%">
+<img src="./forreport/HistEQ/church.jpg" width="48%">
+<img src="./forreport/HistEQ/kitchen.jpg" width="48%">
 
 - RGB : 
   
@@ -64,15 +64,14 @@
 
 將 R, G, B 三個 channels 分別做 Laplacian operation
 
-<img src="./forreport/origin.jpg" width="48%">
-<img src="./forreport/RGBsharpening.jpg" width="48%">
+- Sharpening on RGB & Histogram Equalization on I
 
-### Sharpening on RGB & Histogram Equalization on I
+  將做過 sharpening 後的 RGB 轉 HSI 並對 I 做 Histogram Equalization 。
 
-將做過 sharpening 後的 RGB 轉 HSI 並對 I 做 Histogram Equalization 。
-
-<img src="./forreport/origin.jpg" width="48%">
-<img src="./forreport/Hist_N_sharp.jpg" width="48%">
+<img src="./forreport/sharpening/aloe.jpg" width="48%">
+<img src="./forreport/sharpening/house.jpg" width="48%">
+<img src="./forreport/sharpening/church.jpg" width="48%">
+<img src="./forreport/sharpening/kitchen.jpg" width="48%">
 
 <div style="break-after: page; page-break-after: always;"></div>
 
@@ -84,23 +83,19 @@
 
 從圖可以看到，使用 $(\text{A},\gamma)=(1,0.5)$ 這組參數會將 S 較低，也就是較接近黑的部分拉的較飽和；而 S 越大，改善幅度就越小。
 
-<img src="./forreport/origin.jpg" width="48%">
-<img src="./forreport/Gamma.jpg" width="48%">
 
-### Histogram Equalization on I & Gamma Correction on S
+<img src="./forreport/Gamma/aloe.jpg" width="48%">
+<img src="./forreport/Gamma/house.jpg" width="48%">
+<img src="./forreport/Gamma/church.jpg" width="48%">
+<img src="./forreport/Gamma/kitchen.jpg" width="48%">
 
-將上述的 Histogram Equalization 跟 Gamma Correction 一起使用在 HSI domain
-- I : Histogram Equalization
-- S : Gamma Correction
-
-<img src="./forreport/origin.jpg" width="48%">
-<img src="./forreport/HistEQ_I_Ga.jpg" width="48%">
+- Histogram Equalization on I & Gamma Correction on S
+  將上述的 Histogram Equalization 跟 Gamma Correction 一起使用在 HSI domain
+  - I : Histogram Equalization
+  - S : Gamma Correction
 
 
 <div style="break-after: page; page-break-after: always;"></div>
-
-
-
 
 ## <center>Reference</center>
 - Ch06 投影片 
