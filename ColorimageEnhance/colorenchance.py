@@ -50,7 +50,7 @@ def Batch_imgs_processing(imgs, apply_method, apply_domain, given_domain=rgb, au
 
 def test_domain_converting(imgs, wanted_d=[hsi, lab]):
       
-    testdir= makepath(os.path.join("testing"))
+    testdir= makepath(os.path.join("testing1"))
     
     for d in wanted_d:
         Batch_imgs_processing(
@@ -61,7 +61,7 @@ def test_domain_converting(imgs, wanted_d=[hsi, lab]):
 
 def main(imgs):
 
-    resultdir = makepath(os.path.join("result"))
+    resultdir = makepath(os.path.join("result1"))
     
     print("HistEQ on RGB")
     _ = Batch_imgs_processing(
