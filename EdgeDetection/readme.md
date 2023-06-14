@@ -2,8 +2,8 @@
 
 資工四 408410098 蔡嘉祥
 
-- date due : 6/14
-- date handed in : 6/16
+- date due : 6/16
+- date handed in : 6/14
 <div style="break-after: page; page-break-after: always;"></div>
 
 ## <center>Technical description</center>
