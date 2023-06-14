@@ -32,7 +32,7 @@ $$m_x:\begin{bmatrix}
 
 把上述兩個 mask 跟轉成 grayscale 的圖片分別進行 Convlution 後, 取他們的幾何平均。
 
-$G_x = m_x \* IMG, G_y = m_y \* IMG$ 
+$G_x = m_x \ast IMG, G_y = m_y \ast IMG$ 
 
 (* means convolution)
 
