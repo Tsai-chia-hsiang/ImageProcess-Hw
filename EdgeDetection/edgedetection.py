@@ -28,7 +28,10 @@ def Conv2D(img:np.ndarray, mask:np.ndarray)->np.ndarray:
             padding_img = m((p, padding_img, p))
         return padding_img
    
-    pimg = padding(img=img, extnum=(mask.shape[0]//2,mask.shape[1]//2))
+    pimg = padding(
+        img=img.astype(np.float64), 
+        extnum=(mask.shape[0]//2,mask.shape[1]//2)
+    )
     
     s = pimg.shape
     block_row_indices = np.arange(s[0]-2).reshape(-1,1) + np.arange(mask.shape[0])
@@ -39,28 +42,28 @@ def Conv2D(img:np.ndarray, mask:np.ndarray)->np.ndarray:
     return ((blocks*mask).sum(axis=(2,3)))
 
 
-def RGB2GraySacle(cimg:np.ndarray)->np.ndarray:
-    R = cimg[..., 0].astype(np.float64)
-    G = cimg[..., 1].astype(np.float64)
-    B = cimg[..., 2].astype(np.float64)
-    Gray = np.clip(0, 255, (0.3*R+0.59*G+0.11*B))
-    return Gray
-
-
-edgex = np.array(
+sobelx = np.array(
     [[1,0,-1],
     [2,0,-2],
     [1,0,-1]
     ], dtype=np.float64
 )
-edgey = edgex.T
+sobely = sobelx.T
 
-def Sobel(img:np.ndarray)->np.ndarray:
-    Gx = Conv2D(img=img, mask=edgex)
-    Gy = Conv2D(img=img, mask=edgey)
 
-    E = (Gx**2+Gy**2)**0.5
-    return np.clip(0,255, E).astype(np.uint8)
+def RGBEdge(img:np.ndarray)->np.ndarray:
+    
+    gx = np.dstack(list(Conv2D(img[..., i], mask=sobelx) for i in range(3)))
+    gy = np.dstack(list(Conv2D(img[..., i], mask=sobely) for i in range(3)))
+
+    gxx = (gx**2).sum(axis = 2)
+    gyy = (gy**2).sum(axis = 2)
+    gxy = (gx*gy).sum(axis = 2)
+
+    thetas=0.5*np.arctan(2*gxy/(gxx-gyy+1e-10))
+    f = (0.5*((gxx+gyy) + np.cos(2*thetas)*(gxx-gyy) + 2*gxy*np.sin(2*thetas)))
+    f[np.where(f < 0)] = 0
+    return np.clip(f**0.5, 0, 255)
 
 def main():
     imgpathes = walkdir(os.path.join("HW4_test_image"))
@@ -68,7 +71,7 @@ def main():
 
     for imgpath in imgpathes:
         img = cv2.cvtColor(cv2.imread(imgpath), cv2.COLOR_BGR2RGB)
-        edgedetect = Sobel(RGB2GraySacle(cimg=img).astype(np.uint8))
+        edgedetect = RGBEdge(img=img).astype(np.uint8)
         gf = os.path.join(edgedetection_dir, imgpath[imgpath.rfind("\\")+1:])
         cv2.imwrite(gf, edgedetect)
 
