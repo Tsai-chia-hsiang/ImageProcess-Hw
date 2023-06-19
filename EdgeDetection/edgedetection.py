@@ -67,7 +67,7 @@ def RGBEdge(img:np.ndarray)->np.ndarray:
 
 def main():
     imgpathes = walkdir(os.path.join("HW4_test_image"))
-    edgedetection_dir = makepath(os.path.join("edge_detection1"))
+    edgedetection_dir = makepath(os.path.join("result"))
 
     for imgpath in imgpathes:
         img = cv2.cvtColor(cv2.imread(imgpath), cv2.COLOR_BGR2RGB)
