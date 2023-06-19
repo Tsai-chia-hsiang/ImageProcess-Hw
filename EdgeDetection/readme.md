@@ -32,11 +32,11 @@ $$m_x:\begin{bmatrix}
 
 $g_x = m_x \ast IMG, g_y = m_y \ast IMG$ (* means convolution)
 
-$$g_{xx} = \frac{\partial{R}}{\partial{x}}^2+\frac{\partial{G}}{\partial{x}}^2+\frac{\partial{B}}{\partial{x}}^2=\displaystyle\sum_{c=R,G,B}g_{x,c}^2 \\
+$$g_{xx} = \frac{\partial{R}}{\partial{x}}^2+\frac{\partial{G}}{\partial{x}}^2+\frac{\partial{B}}{\partial{x}}^2=\displaystyle\sum_{c=R,G,B}g_{x,c}^2$$
 
-g_{yy} = \frac{\partial{R}}{\partial{y}}^2+\frac{\partial{G}}{\partial{y}}^2+\frac{\partial{B}}{\partial{y}}^2=\displaystyle\sum_{c=R,G,B}g_{y,c}^2 \\
+$$g_{yy} = \frac{\partial{R}}{\partial{y}}^2+\frac{\partial{G}}{\partial{y}}^2+\frac{\partial{B}}{\partial{y}}^2=\displaystyle\sum_{c=R,G,B}g_{y,c}^2$$
 
-g_{xy} = \frac{\partial{R}}{\partial{x}}\frac{\partial{R}}{\partial{y}}+\frac{\partial{G}}{\partial{x}}\frac{\partial{G}}{\partial{y}}+\frac{\partial{B}}{\partial{x}}\frac{\partial{B}}{\partial{y}}=\displaystyle\sum_{c=R,G,B}\text{elemul}(g_{x,c},g_{y,c})
+$$g_{xy} = \frac{\partial{R}}{\partial{x}}\frac{\partial{R}}{\partial{y}}+\frac{\partial{G}}{\partial{x}}\frac{\partial{G}}{\partial{y}}+\frac{\partial{B}}{\partial{x}}\frac{\partial{B}}{\partial{y}}=\displaystyle\sum_{c=R,G,B}\text{elemul}(g_{x,c},g_{y,c})
 $$ 
 
 direction : $\theta = \frac{1}{2}\tan^{-1}(\frac{2g_{xy}}{g_{xx}-g_{yy}})$ ，這邊為了不要讓分母有 0 出現，我將分母額外加了一個 $\epsilon = 10^{-10}$
